@@ -6,8 +6,9 @@ using UnityEngine.AI;
 public class PlayerMotor : MonoBehaviour
 {
     public PlayerInput input;
-    public Rigidbody rigidbody;
-    public float speed = 5f;
+    public new Rigidbody rigidbody;
+    public float MovementSpeed = 5f;
+    public float JumpHeight = 10f;
 
     private Vector3 desiredPosition;
     private bool wantsMove = false;
@@ -25,7 +26,7 @@ public class PlayerMotor : MonoBehaviour
 
     void OnJumpDown()
     {
-
+        rigidbody.AddForce(Vector3.up * JumpHeight);
     }
 
     void OnJumpHold()
@@ -40,13 +41,15 @@ public class PlayerMotor : MonoBehaviour
 
     void OnMoveDown(Vector2 inputVector)
     {
-    
+
     }
 
     void OnMoveHold(Vector2 inputVector)
     {
         wantsMove = true;
-        desiredPosition = transform.position + new Vector3(inputVector.x, 0, inputVector.y) * speed * Time.deltaTime;
+        desiredPosition = transform.position + new Vector3(inputVector.x, 0, inputVector.y) * MovementSpeed * Time.deltaTime;
+        rigidbody.AddForce(new Vector3(inputVector.x, rigidbody.velocity.y, inputVector.y) * MovementSpeed * Time.deltaTime, ForceMode.Impulse);
+
     }
 
     void OnMoveUp(Vector2 inputVector)
@@ -58,7 +61,7 @@ public class PlayerMotor : MonoBehaviour
     {
         if (wantsMove)
         {
-            rigidbody.MovePosition(desiredPosition);
+            //rigidbody.MovePosition(desiredPosition);
         }
     }
 }
